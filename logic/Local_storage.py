@@ -4,44 +4,43 @@ import pickle
 
 
 class LocalStorage(ABC):
-    data_folder = Path(__file__).parent / "../data"
-    card_folder = Path(__file__).parent / "../data/cards"
-    deck_folder = Path(__file__).parent / "../data/decks"
 
-    @classmethod
     @abstractmethod
-    def save_card(cls, card):
+    def save_card(self, card):
         pass
 
-    @classmethod
     @abstractmethod
-    def load_card(cls, card):
+    def load_card(self, card):
         pass
 
-    @classmethod
     @abstractmethod
-    def save_deck(cls, deck):
+    def save_deck(self, deck):
         pass
 
-    @classmethod
     @abstractmethod
-    def load_deck(cls, deck):
+    def load_deck(self, deck):
         pass
 
 class LocalStorageImpl(LocalStorage):
 
-    @classmethod
-    def save_card(cls, card):
-        outfile = open(cls.card_folder / card.name, "wb")
+    def __init__(self):
+        self.data_folder = Path(__file__).parent / "../data"
+        self.card_folder = Path(__file__).parent / "../data/cards"
+        self.deck_folder = Path(__file__).parent / "../data/decks"
 
-    @classmethod
-    def load_card(cls, card):
+    def save_card(self, card):
+        outfile = open(self.card_folder / card.id, "wb")
+        pickle.dump(card, outfile)
+        outfile.close()
+
+    def load_card(self, card):
+        infile = open(self.card_folder / card.id, "rb")
+        card = pickle.load(infile)
+        infile.close()
+        return card
+
+    def save_deck(self, deck):
         pass
 
-    @classmethod
-    def save_deck(cls, deck):
-        pass
-
-    @classmethod
-    def load_deck(cls, deck):
+    def load_deck(self, deck):
         pass
